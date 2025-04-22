@@ -327,7 +327,7 @@ export default function LandingPage() {
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-3xl md:text-4xl font-bold mb-6">JOIN THE ORIGINALS</h2>
             <p className="text-gray-300 mb-8">
-              Looking for elite players who understand strategy, teamwork, and have the skills to dominate. If you're
+              Looking for elite players who understand strategy, teamwork, and have the skills to dominate. If you&apos;re
               ready to be part of the most feared alliance in Last War Survival Game, apply now.
             </p>
 
