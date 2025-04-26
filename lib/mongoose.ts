@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-
 const MONGODB_URI = process.env.MONGODB_URI!;
 
 if (!MONGODB_URI) {
@@ -9,7 +8,7 @@ if (!MONGODB_URI) {
 /**
  * Global is used here to maintain a cached connection across hot reloads in development
  */
-let cached = (global as any).mongoose || { conn: null, promise: null };
+const cached = (global).mongoose || { conn: null, promise: null };
 
 async function dbConnect() {
   if (cached.conn) return cached.conn;
@@ -25,6 +24,6 @@ async function dbConnect() {
   return cached.conn;
 }
 
-(global as any).mongoose = cached;
+(global).mongoose = cached;
 
 export default dbConnect;

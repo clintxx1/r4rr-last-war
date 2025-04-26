@@ -20,20 +20,37 @@ import {
   Flame,
 } from "lucide-react";
 import React, { useEffect, useMemo, useState } from "react";
-import _, { debounce } from "lodash";
+import { debounce } from "lodash";
 
-export const dynamice = "force-dynamic";
+type MemberProps = {
+  _id: string;
+  name: string;
+  gender: string;
+  level: number;
+  alliancePosition: string;
+  positionDescription?: string;
+  totalPower: number;
+  powerUnit: string;
+  enemyDefeated: number;
+  defeatedUnit: string;
+  likes: number;
+  giftLevel: number;
+  profile?: string;
+  createdAt: Date;
+};
+
+export const dynamic = "force-dynamic";
 export default function MembersPage() {
-  const [teamMembers, setTeamMembers] = useState<any[]>([]);
-  const [page, setPage] = useState<number>(1);
-  const [totalPage, setTotalPage] = useState<number | null>(null);
-  const [limit, setLimit] = useState<number>(20);
+  const [teamMembers, setTeamMembers] = useState<MemberProps[]>([]);
+  // const [page, setPage] = useState<number>(1);
+  // const [totalPage, setTotalPage] = useState<number | null>(null);
+  // const [limit, setLimit] = useState<number>(20);
   const [name, setName] = useState<string>("");
   const [alliancePosition, setAlliancePosition] = useState<string>("all");
   const [totalPower, setTotalPower] = useState<string>("desc");
   useEffect(() => {
     fetchAllMembers();
-  }, [name, page, totalPower, alliancePosition]);
+  }, [name, totalPower, alliancePosition]);
   useEffect(() => {
     return () => {
       debouncedSearch.cancel();
@@ -42,11 +59,11 @@ export default function MembersPage() {
   const fetchAllMembers = async () => {
     try {
       const res = await fetch(
-        `/api/members?page=${page}&limit=${limit}&name=${name}&alliancePosition=${alliancePosition}&totalPower=${totalPower}`
+        `/api/members?name=${name}&alliancePosition=${alliancePosition}&totalPower=${totalPower}`
       );
       const members = await res.json();
       setTeamMembers(members?.members);
-      setTotalPage(members?.totalPages);
+      // setTotalPage(members?.totalPages);
     } catch (error) {
       console.error(error, "error here");
     }

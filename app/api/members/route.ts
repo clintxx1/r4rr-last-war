@@ -1,7 +1,12 @@
 import dbConnect from "@/lib/mongoose";
 import Member from "@/models/Member";
+import { SortOrder } from "mongoose";
 import { NextResponse } from "next/server";
-
+type QueryProps = {
+  name?: { $regex: string; $options: string; };
+  alliancePosition?: string;
+};
+type SortProps = { [key: string]: SortOrder | { $meta }; };
 export async function GET(req: Request) {
   try {
     await dbConnect();
@@ -13,8 +18,8 @@ export async function GET(req: Request) {
     const alliancePosition = searchParams.get("alliancePosition");
     const totalPower = searchParams.get("totalPower");
 
-    const query: any = {};
-    let sort: any = {
+    const query: QueryProps = {};
+    let sort: SortProps = {
       createdAt: -1,
     };
 
