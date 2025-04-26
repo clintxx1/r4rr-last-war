@@ -1,7 +1,8 @@
-import type React from "react"
-import Link from "next/link"
-import Image from "next/image"
-import { Button } from "@/components/ui/button"
+"use client";
+import type React from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
 import {
   Trophy,
   Users,
@@ -14,9 +15,14 @@ import {
   Twitter,
   Youtube,
   Twitch,
-} from "lucide-react"
+} from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function LandingPage() {
+  const router = useRouter();
+  const handleViewAllMembers = () => {
+    router.push("/members");
+  };
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Hero Section */}
@@ -32,10 +38,16 @@ export default function LandingPage() {
               <span className="text-xl font-bold tracking-tight">R4RR</span>
             </div>
             <div className="hidden md:flex items-center space-x-8">
-              <Link href="#about" className="text-sm font-medium text-gray-300 hover:text-red-500 transition-colors">
+              <Link
+                href="#about"
+                className="text-sm font-medium text-gray-300 hover:text-red-500 transition-colors"
+              >
                 ABOUT
               </Link>
-              <Link href="#team" className="text-sm font-medium text-gray-300 hover:text-red-500 transition-colors">
+              <Link
+                href="#team"
+                className="text-sm font-medium text-gray-300 hover:text-red-500 transition-colors"
+              >
                 TEAM
               </Link>
               <Link
@@ -44,10 +56,16 @@ export default function LandingPage() {
               >
                 ACHIEVEMENTS
               </Link>
-              <Link href="#gallery" className="text-sm font-medium text-gray-300 hover:text-red-500 transition-colors">
+              <Link
+                href="#gallery"
+                className="text-sm font-medium text-gray-300 hover:text-red-500 transition-colors"
+              >
                 GALLERY
               </Link>
-              <Link href="#join" className="text-sm font-medium text-gray-300 hover:text-red-500 transition-colors">
+              <Link
+                href="#join"
+                className="text-sm font-medium text-gray-300 hover:text-red-500 transition-colors"
+              >
                 JOIN US
               </Link>
             </div>
@@ -76,14 +94,22 @@ export default function LandingPage() {
                 THE ORIGINALS
               </span>
             </h1>
-            <p className="mb-6 text-xl md:text-2xl font-bold text-gray-400">R4RR</p>
+            <p className="mb-6 text-xl md:text-2xl font-bold text-gray-400">
+              R4RR
+            </p>
             <p className="mb-8 max-w-2xl text-gray-400">
-              Elite alliance dominating the battlefield in Last War Survival Game. Strategy. Precision. Victory. The
-              power of hardwork and friendship. No survivors left behind.
+              Elite alliance dominating the battlefield in Last War Survival
+              Game. Strategy. Precision. Victory. The power of hardwork and
+              friendship. No survivors left behind.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button className="bg-red-500 hover:bg-red-600 text-white px-8">JOIN OUR RANKS</Button>
-              <Button variant="outline" className="border-gray-700 text-gray-300 hover:bg-gray-800">
+              <Button className="bg-red-500 hover:bg-red-600 text-white px-8">
+                JOIN OUR RANKS
+              </Button>
+              <Button
+                variant="outline"
+                className="border-gray-700 text-gray-300 hover:bg-gray-800"
+              >
                 WATCH GAMEPLAY
               </Button>
             </div>
@@ -94,7 +120,10 @@ export default function LandingPage() {
       </header>
 
       {/* About Section */}
-      <section id="about" className="py-20 bg-gradient-to-b from-black to-gray-900">
+      <section
+        id="about"
+        className="py-20 bg-gradient-to-b from-black to-gray-900"
+      >
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row gap-12 items-center">
             <div className="md:w-1/2">
@@ -103,14 +132,16 @@ export default function LandingPage() {
                 ABOUT THE ORIGINALS
               </h2>
               <p className="text-gray-400 mb-6">
-                Founded in the early days of Last War Survival Game, The Originals has grown into one of the most feared
-                and respected alliances in the game. Our name represents our status as pioneers and innovators in
-                strategy and teamwork.
+                Founded in the early days of Last War Survival Game, The
+                Originals has grown into one of the most feared and respected
+                alliances in the game. Our name represents our status as
+                pioneers and innovators in strategy and teamwork.
               </p>
               <p className="text-gray-400 mb-6">
-                With over 50 active members across multiple time zones, we ensure 24/7 territory control and resource
-                domination. Our coordinated attacks and defensive strategies have earned us a reputation that makes
-                enemies think twice before challenging us.
+                With over 50 active members across multiple time zones, we
+                ensure 24/7 territory control and resource domination. Our
+                coordinated attacks and defensive strategies have earned us a
+                reputation that makes enemies think twice before challenging us.
               </p>
               <div className="grid grid-cols-2 gap-6 mt-8">
                 <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
@@ -133,7 +164,12 @@ export default function LandingPage() {
             </div>
             <div className="md:w-1/2 relative">
               <div className="relative h-[400px] w-full overflow-hidden rounded-lg border-2 border-red-500/50 shadow-lg shadow-red-500/10">
-                <Image src="/lastwar.png?height=800&width=600" alt="Team in action" fill className="object-cover" />
+                <Image
+                  src="/lastwar.png?height=800&width=600"
+                  alt="Team in action"
+                  fill
+                  className="object-cover"
+                />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
                 <div className="absolute bottom-4 left-4 right-4">
                   <p className="text-sm font-medium text-gray-300">
@@ -155,7 +191,10 @@ export default function LandingPage() {
       </section>
 
       {/* Team Leaders Section */}
-      <section id="team" className="py-20 bg-gradient-to-b from-gray-900 to-black">
+      <section
+        id="team"
+        className="py-20 bg-gradient-to-b from-gray-900 to-black"
+      >
         <div className="container mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center flex items-center justify-center">
             <Users className="mr-3 h-8 w-8 text-red-500" />
@@ -202,11 +241,20 @@ export default function LandingPage() {
                     className="object-cover transition-transform group-hover:scale-110"
                   />
                 </div>
-                <h3 className="mb-1 text-xl font-bold text-center">{member.name}</h3>
-                <p className="mb-3 text-sm text-gray-400 text-center">{member.role}</p>
-                <p className="text-xs text-red-400 text-center">{member.stats}</p>
+                <h3 className="mb-1 text-xl font-bold text-center">
+                  {member.name}
+                </h3>
+                <p className="mb-3 text-sm text-gray-400 text-center">
+                  {member.role}
+                </p>
+                <p className="text-xs text-red-400 text-center">
+                  {member.stats}
+                </p>
                 <div className="mt-4 pt-4 border-t border-gray-700">
-                  <Button variant="ghost" className="w-full text-xs text-gray-400 hover:text-white">
+                  <Button
+                    variant="ghost"
+                    className="w-full text-xs text-gray-400 hover:text-white"
+                  >
                     VIEW PROFILE <ChevronRight className="ml-1 h-3 w-3" />
                   </Button>
                 </div>
@@ -215,7 +263,11 @@ export default function LandingPage() {
           </div>
 
           <div className="mt-12 text-center">
-            <Button variant="outline" className="border-gray-700 text-gray-300 hover:bg-gray-800">
+            <Button
+              onClick={handleViewAllMembers}
+              variant="outline"
+              className="border-gray-700 text-gray-300 hover:bg-gray-800 cursor-pointer"
+            >
               VIEW ALL MEMBERS <ChevronRight className="ml-1 h-4 w-4" />
             </Button>
           </div>
@@ -236,10 +288,13 @@ export default function LandingPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="bg-gray-900/80 p-6 rounded-lg border border-gray-700 backdrop-blur-sm">
-              <h3 className="text-xl font-bold mb-4 text-red-400">Server Domination</h3>
+              <h3 className="text-xl font-bold mb-4 text-red-400">
+                Server Domination
+              </h3>
               <p className="text-gray-300 mb-4">
-                Conquered and maintained control of 3 consecutive server seasons, establishing R4RR as the dominant
-                force in the Last War universe.
+                Conquered and maintained control of 3 consecutive server
+                seasons, establishing R4RR as the dominant force in the Last War
+                universe.
               </p>
               <div className="flex items-center text-sm text-gray-400">
                 <Trophy className="mr-2 h-4 w-4 text-yellow-500" />
@@ -248,10 +303,13 @@ export default function LandingPage() {
             </div>
 
             <div className="bg-gray-900/80 p-6 rounded-lg border border-gray-700 backdrop-blur-sm">
-              <h3 className="text-xl font-bold mb-4 text-red-400">Resource Kings</h3>
+              <h3 className="text-xl font-bold mb-4 text-red-400">
+                Resource Kings
+              </h3>
               <p className="text-gray-300 mb-4">
-                Established the most efficient resource collection network, generating over 1M resources daily through
-                strategic territory control.
+                Established the most efficient resource collection network,
+                generating over 1M resources daily through strategic territory
+                control.
               </p>
               <div className="flex items-center text-sm text-gray-400">
                 <Trophy className="mr-2 h-4 w-4 text-yellow-500" />
@@ -260,10 +318,12 @@ export default function LandingPage() {
             </div>
 
             <div className="bg-gray-900/80 p-6 rounded-lg border border-gray-700 backdrop-blur-sm">
-              <h3 className="text-xl font-bold mb-4 text-red-400">Unbreakable Defense</h3>
+              <h3 className="text-xl font-bold mb-4 text-red-400">
+                Unbreakable Defense
+              </h3>
               <p className="text-gray-300 mb-4">
-                Developed revolutionary defensive strategies that allowed our main base to remain unbreached for 120+
-                consecutive days.
+                Developed revolutionary defensive strategies that allowed our
+                main base to remain unbreached for 120+ consecutive days.
               </p>
               <div className="flex items-center text-sm text-gray-400">
                 <Trophy className="mr-2 h-4 w-4 text-yellow-500" />
@@ -273,7 +333,9 @@ export default function LandingPage() {
           </div>
 
           <div className="mt-16">
-            <h3 className="text-2xl font-bold mb-8 text-center">BATTLE STATISTICS</h3>
+            <h3 className="text-2xl font-bold mb-8 text-center">
+              BATTLE STATISTICS
+            </h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {[
                 { label: "Enemies Defeated", value: "250,000+", icon: Swords },
@@ -281,9 +343,14 @@ export default function LandingPage() {
                 { label: "Alliance Power", value: "870M", icon: Flame },
                 { label: "Win Rate", value: "87%", icon: Trophy },
               ].map((stat, index) => (
-                <div key={index} className="bg-gray-800/50 p-6 rounded-lg border border-gray-700 text-center">
+                <div
+                  key={index}
+                  className="bg-gray-800/50 p-6 rounded-lg border border-gray-700 text-center"
+                >
                   <stat.icon className="mx-auto mb-3 h-8 w-8 text-red-500" />
-                  <p className="text-2xl md:text-3xl font-bold text-white mb-1">{stat.value}</p>
+                  <p className="text-2xl md:text-3xl font-bold text-white mb-1">
+                    {stat.value}
+                  </p>
                   <p className="text-xs text-gray-400">{stat.label}</p>
                 </div>
               ))}
@@ -295,11 +362,16 @@ export default function LandingPage() {
       {/* Gallery Section */}
       <section id="gallery" className="py-20 bg-black">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">BATTLE GALLERY</h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">
+            BATTLE GALLERY
+          </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {[...Array(6)].map((_, index) => (
-              <div key={index} className="group relative h-64 overflow-hidden rounded-lg">
+              <div
+                key={index}
+                className="group relative h-64 overflow-hidden rounded-lg"
+              >
                 <Image
                   src={`/lastwar.png?height=600&width=800`}
                   alt={`Gameplay screenshot ${index + 1}`}
@@ -308,31 +380,45 @@ export default function LandingPage() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform">
-                  <h3 className="text-lg font-bold">Battle Scene {index + 1}</h3>
-                  <p className="text-sm text-gray-300">Last War Survival Game</p>
+                  <h3 className="text-lg font-bold">
+                    Battle Scene {index + 1}
+                  </h3>
+                  <p className="text-sm text-gray-300">
+                    Last War Survival Game
+                  </p>
                 </div>
               </div>
             ))}
           </div>
 
           <div className="mt-12 text-center">
-            <Button className="bg-red-500 hover:bg-red-600 text-white">VIEW FULL GALLERY</Button>
+            <Button className="bg-red-500 hover:bg-red-600 text-white">
+              VIEW FULL GALLERY
+            </Button>
           </div>
         </div>
       </section>
 
       {/* Join Section */}
-      <section id="join" className="py-20 bg-gradient-to-b from-black to-purple-900/20">
+      <section
+        id="join"
+        className="py-20 bg-gradient-to-b from-black to-purple-900/20"
+      >
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">JOIN THE ORIGINALS</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">
+              JOIN THE ORIGINALS
+            </h2>
             <p className="text-gray-300 mb-8">
-              Looking for elite players who understand strategy, teamwork, and have the skills to dominate. If you&apos;re
-              ready to be part of the most feared alliance in Last War Survival Game, apply now.
+              Looking for elite players who understand strategy, teamwork, and
+              have the skills to dominate. If you&apos;re ready to be part of
+              the most feared alliance in Last War Survival Game, apply now.
             </p>
 
             <div className="bg-gray-800/50 p-8 rounded-lg border border-red-500/30 mb-8">
-              <h3 className="text-xl font-bold mb-4">RECRUITMENT REQUIREMENTS</h3>
+              <h3 className="text-xl font-bold mb-4">
+                RECRUITMENT REQUIREMENTS
+              </h3>
               <ul className="text-left space-y-2 mb-6">
                 <li className="flex items-start">
                   <ChevronRight className="mr-2 h-5 w-5 text-red-500 shrink-0 mt-0.5" />
@@ -348,21 +434,31 @@ export default function LandingPage() {
                 </li>
                 <li className="flex items-start">
                   <ChevronRight className="mr-2 h-5 w-5 text-red-500 shrink-0 mt-0.5" />
-                  <span>Strategic mindset and willingness to follow leadership</span>
+                  <span>
+                    Strategic mindset and willingness to follow leadership
+                  </span>
                 </li>
               </ul>
 
-              <Button className="w-full bg-red-500 hover:bg-red-600 text-white">APPLY TO JOIN R4RR</Button>
+              <Button className="w-full bg-red-500 hover:bg-red-600 text-white">
+                APPLY TO JOIN R4RR
+              </Button>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="https://discord.gg/rhENN5tc86">
-                <Button variant="outline" className="border-gray-700 text-gray-300 hover:bg-gray-800" >
+                <Button
+                  variant="outline"
+                  className="border-gray-700 text-gray-300 hover:bg-gray-800"
+                >
                   <Discord className="mr-2 h-5 w-5" />
                   JOIN DISCORD
                 </Button>
               </Link>
-              <Button variant="outline" className="border-gray-700 text-gray-300 hover:bg-gray-800">
+              <Button
+                variant="outline"
+                className="border-gray-700 text-gray-300 hover:bg-gray-800"
+              >
                 <Gamepad2 className="mr-2 h-5 w-5" />
                 GAME ID: R4RR#1441
               </Button>
@@ -384,31 +480,51 @@ export default function LandingPage() {
             </div>
 
             <div className="flex gap-6 mb-6 md:mb-0">
-              <Button variant="ghost" size="icon" className="text-gray-400 hover:text-white">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-gray-400 hover:text-white"
+              >
                 <Twitch className="h-5 w-5" />
               </Button>
-              <Button variant="ghost" size="icon" className="text-gray-400 hover:text-white">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-gray-400 hover:text-white"
+              >
                 <Youtube className="h-5 w-5" />
               </Button>
-              <Button variant="ghost" size="icon" className="text-gray-400 hover:text-white">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-gray-400 hover:text-white"
+              >
                 <Twitter className="h-5 w-5" />
               </Button>
-              <Button variant="ghost" size="icon" className="text-gray-400 hover:text-white">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-gray-400 hover:text-white"
+              >
                 <Github className="h-5 w-5" />
               </Button>
             </div>
           </div>
 
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-sm text-gray-500">
-            <p>© {new Date().getFullYear()} The Originals (R4RR). All rights reserved.</p>
+            <p>
+              © {new Date().getFullYear()} The Originals (R4RR). All rights
+              reserved.
+            </p>
             <p className="mt-2">
-              This is an unofficial fan site for Last War Survival Game. Not affiliated with game developers.
+              This is an unofficial fan site for Last War Survival Game. Not
+              affiliated with game developers.
             </p>
           </div>
         </div>
       </footer>
     </div>
-  )
+  );
 }
 
 // Discord icon component
@@ -437,5 +553,5 @@ function Discord({ className, ...props }: React.SVGProps<SVGSVGElement>) {
       <path d="M5.5 2.5 3 5 5.5 7.5" />
       <path d="M3 5H21" />
     </svg>
-  )
+  );
 }

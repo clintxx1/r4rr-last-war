@@ -2,28 +2,61 @@ import dbConnect from "@/lib/mongoose";
 import Member from "@/models/Member";
 import { NextResponse } from "next/server";
 
-export async function GET() {
-  await dbConnect();
-  const members = await Member.find();
-  return NextResponse.json(members);
+export async function GET(req: Request) {
+  try {
+    await dbConnect();
+    const { searchParams } = new URL(req.url);
+
+    const page = parseInt(searchParams.get("page") || "1");
+    const limit = parseInt(searchParams.get("limit") || "20");
+    const name = searchParams.get("name") || "";
+    const alliancePosition = searchParams.get("alliancePosition");
+    const totalPower = searchParams.get("totalPower");
+
+    const query: any = {};
+    let sort: any = {
+      createdAt: -1,
+    };
+
+    if (name) {
+      query.name = { $regex: name, $options: "i" }; // case-insensitive search
+    }
+
+    if (alliancePosition && alliancePosition !== "all") {
+      query.alliancePosition = alliancePosition;
+    }
+
+    if (totalPower) {
+      const sortOrder = totalPower === "desc" ? -1 : 1;
+      sort = {
+        totalPower: sortOrder,
+      };
+    }
+
+    const skip = (page - 1) * limit;
+    const [members, totalCount] = await Promise.all([
+      Member.find(query).skip(skip).limit(limit).sort(sort),
+      Member.countDocuments(query),
+    ]);
+
+    return NextResponse.json({
+      members,
+      totalPages: Math.ceil(totalCount / limit),
+      currentPage: page,
+      totalCount,
+    });
+  } catch (error) {
+    return NextResponse.json({ message: error }, { status: 500 });
+  }
 }
 
 export async function POST(req: Request) {
-  await dbConnect();
-  // const data = await req.json();
-  const data = {
-    name: "Kwekk",
-    gender: "Male",
-    level: 22,
-    alliancePosition: "R4",
-    positionDescription: "Butler",
-    totalPower: 16.4,
-    powerUnit: "M",
-    enemyDefeated: 417.6,
-    defeatedUnit: "K",
-    likes: 220,
-    giftLevel: 0,
+  try {
+    await dbConnect();
+    const data = await req.json();
+    const newMember = await Member.create(data);
+    return NextResponse.json(newMember, { status: 201 });
+  } catch (error) {
+    return NextResponse.json({ message: error }, { status: 500 });
   }
-  const newMember = await Member.create(data);
-  return NextResponse.json(newMember, { status: 201 });
 }

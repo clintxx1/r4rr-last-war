@@ -8,7 +8,7 @@ const MemberSchema = new Schema(
     },
     gender: {
       type: String,
-      enum: ["Male", "Female"],
+      enum: ["Male", "Female", "N/A"],
       required: true,
     },
     level: {
