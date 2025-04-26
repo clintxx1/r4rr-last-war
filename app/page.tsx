@@ -17,9 +17,48 @@ import {
   Twitch,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+export const dynamic = "force-dynamic"; // Force dynamic rendering for this page
+
+type PreviewProps = {
+  _id: string;
+  name: string;
+  role: string;
+  profile: string;
+  stats: string;
+};
 
 export default function LandingPage() {
   const router = useRouter();
+  const [members, setMembers] = useState<PreviewProps[]>([]);
+  useEffect(() => {
+    fetchAllMembers();
+  }, []);
+  const fetchAllMembers = async () => {
+    try {
+      const res = await fetch(
+        `/api/members`
+        , { method: "GET" })
+      const members = await res.json();
+      if (members?.members?.length) {
+        const newMembers: PreviewProps[] = [];
+        for (let i = 0; i < 4; i++) {
+          const member = members.members[i];
+          const data = {
+            _id: member._id,
+            name: member.name,
+            role: `[${member.alliancePosition}] - ${member.positionDescription}`,
+            profile: member.profile || "/lastwar.png",
+            stats: `Power: ${member.totalPower}${member.powerUnit}`,
+          };
+          newMembers.push(data);
+        }
+        setMembers(newMembers);
+      }
+    } catch (error) {
+      console.error(error, "error here");
+    }
+  };
   const handleViewAllMembers = () => {
     router.push("/members");
   };
@@ -202,39 +241,14 @@ export default function LandingPage() {
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {[
-              {
-                name: "NickkKlauss",
-                role: "[R5] - Alliance Leader",
-                image: "/nick.png?height=300&width=300",
-                stats: "Win Rate: 92%",
-              },
-              {
-                name: "unfairbro v2",
-                role: "[R4] - Warlord",
-                image: "/unfair.png?height=300&width=300",
-                stats: "Battles: 1,240+",
-              },
-              {
-                name: "iFish123",
-                role: "[R4] - Recruiter",
-                image: "/ifish.png?height=300&width=300",
-                stats: "Resources: 15M+",
-              },
-              {
-                name: "Janize ph",
-                role: "[R4] - Muse",
-                image: "/janize.png?height=300&width=300",
-                stats: "Successful Defenses: 89",
-              },
-            ].map((member, index) => (
+            {members.map((member, index) => (
               <div
                 key={index}
                 className="group relative overflow-hidden rounded-lg bg-gray-800/30 p-6 transition-all hover:bg-gray-800/60 border border-gray-700 hover:border-red-500/50"
               >
                 <div className="mb-4 h-24 w-24 mx-auto overflow-hidden rounded-full border-2 border-red-500/50">
                   <Image
-                    src={member.image || "/lastwar.png"}
+                    src={member.profile || "/lastwar.png"}
                     alt={member.name}
                     width={96}
                     height={96}
@@ -252,6 +266,7 @@ export default function LandingPage() {
                 </p>
                 <div className="mt-4 pt-4 border-t border-gray-700">
                   <Button
+                    onClick={() => router.push(`/members/${member._id}`)}
                     variant="ghost"
                     className="w-full text-xs text-gray-400 hover:text-white"
                   >

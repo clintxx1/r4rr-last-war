@@ -1,3 +1,4 @@
+import { verifyApiKey } from "@/lib/auth";
 import dbConnect from "@/lib/mongoose";
 import Member from "@/models/Member";
 import { SortOrder } from "mongoose";
@@ -13,14 +14,14 @@ export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
 
     const page = parseInt(searchParams.get("page") || "1");
-    const limit = parseInt(searchParams.get("limit") || "20");
+    const limit = parseInt(searchParams.get("limit") || "100");
     const name = searchParams.get("name") || "";
     const alliancePosition = searchParams.get("alliancePosition");
     const totalPower = searchParams.get("totalPower");
 
     const query: QueryProps = {};
     let sort: SortProps = {
-      createdAt: -1,
+      alliancePosition: -1,
     };
 
     if (name) {
@@ -58,6 +59,8 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   try {
     await dbConnect();
+    const authError = await verifyApiKey(req);
+    if (authError) return authError;
     const data = await req.json();
     const newMember = await Member.create(data);
     return NextResponse.json(newMember, { status: 201 });

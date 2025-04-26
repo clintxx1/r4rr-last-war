@@ -21,8 +21,9 @@ import {
 } from "lucide-react";
 import React, { useEffect, useMemo, useState } from "react";
 import { debounce } from "lodash";
+import Loading from "./loading";
 
-type MemberProps = {
+export type MemberProps = {
   _id: string;
   name: string;
   gender: string;
@@ -42,14 +43,19 @@ type MemberProps = {
 export const dynamic = "force-dynamic";
 export default function MembersPage() {
   const [teamMembers, setTeamMembers] = useState<MemberProps[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   // const [page, setPage] = useState<number>(1);
   // const [totalPage, setTotalPage] = useState<number | null>(null);
   // const [limit, setLimit] = useState<number>(20);
   const [name, setName] = useState<string>("");
   const [alliancePosition, setAlliancePosition] = useState<string>("all");
-  const [totalPower, setTotalPower] = useState<string>("desc");
+  const [totalPower, setTotalPower] = useState<string>("");
   useEffect(() => {
-    fetchAllMembers();
+    const fetchData = async () => {
+      await fetchAllMembers();
+      setIsLoading(false);
+    }
+    fetchData();
   }, [name, totalPower, alliancePosition]);
   useEffect(() => {
     return () => {
@@ -60,7 +66,7 @@ export default function MembersPage() {
     try {
       const res = await fetch(
         `/api/members?name=${name}&alliancePosition=${alliancePosition}&totalPower=${totalPower}`
-      );
+        , { method: "GET" });
       const members = await res.json();
       setTeamMembers(members?.members);
       // setTotalPage(members?.totalPages);
@@ -84,6 +90,8 @@ export default function MembersPage() {
       }, 500), // 500ms delay
     []
   );
+
+  if (isLoading) return <Loading />;
 
   return (
     <div className="min-h-screen bg-black text-white">
@@ -184,20 +192,20 @@ export default function MembersPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {teamMembers.length
             ? teamMembers.map((member) => (
-                <Link
-                  href={`/members/${member._id}`}
-                  key={member._id}
-                  className="group bg-gray-900/30 border border-gray-800 hover:border-red-500/50 rounded-lg overflow-hidden transition-all duration-300"
-                >
-                  <div className="relative h-40 overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/80 z-10"></div>
-                    <Image
-                      src={member.profile || "/placeholder.png"}
-                      alt={member.name}
-                      fill
-                      className="object-cover transition-transform duration-500 group-hover:scale-110"
-                    />
-                    {/* <div className="absolute top-3 right-3 z-20">
+              <Link
+                href={`/members/${member._id}`}
+                key={member._id}
+                className="group bg-gray-900/30 border border-gray-800 hover:border-red-500/50 rounded-lg overflow-hidden transition-all duration-300"
+              >
+                <div className="relative h-40 overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/80 z-10"></div>
+                  <Image
+                    src={member.profile || "/placeholder.png"}
+                    alt={member.name}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                  {/* <div className="absolute top-3 right-3 z-20">
                   <div
                     className={`flex items-center gap-1.5 rounded-full px-2 py-1 text-xs ${
                       member.status === "online"
@@ -215,43 +223,43 @@ export default function MembersPage() {
                     {member.status === "online" ? "Online" : "Offline"}
                   </div>
                 </div> */}
-                    <div className="absolute bottom-3 left-3 right-3 z-20">
-                      <h3 className="text-lg font-bold text-white">
-                        {member.name}
-                      </h3>
-                      <p className="text-sm text-gray-300">
-                        [{member.alliancePosition}]&nbsp;
-                        {member.positionDescription}
+                  <div className="absolute bottom-3 left-3 right-3 z-20">
+                    <h3 className="text-lg font-bold text-white">
+                      {member.name}
+                    </h3>
+                    <p className="text-sm text-gray-300">
+                      [{member.alliancePosition}]&nbsp;
+                      {member.positionDescription}
+                    </p>
+                  </div>
+                </div>
+                <div className="p-4">
+                  <div className="grid grid-cols-2 gap-2 mb-4">
+                    <div className="bg-gray-800/50 rounded p-2 text-center">
+                      <p className="text-xs text-gray-400">LEVEL</p>
+                      <p className="text-lg font-bold text-white">
+                        {member.level}
+                      </p>
+                    </div>
+                    <div className="bg-gray-800/50 rounded p-2 text-center">
+                      <p className="text-xs text-gray-400">POWER</p>
+                      <p className="text-lg font-bold text-red-400">
+                        {member.totalPower.toFixed(1)}
+                        {member.powerUnit}
                       </p>
                     </div>
                   </div>
-                  <div className="p-4">
-                    <div className="grid grid-cols-2 gap-2 mb-4">
-                      <div className="bg-gray-800/50 rounded p-2 text-center">
-                        <p className="text-xs text-gray-400">LEVEL</p>
-                        <p className="text-lg font-bold text-white">
-                          {member.level}
-                        </p>
-                      </div>
-                      <div className="bg-gray-800/50 rounded p-2 text-center">
-                        <p className="text-xs text-gray-400">POWER</p>
-                        <p className="text-lg font-bold text-red-400">
-                          {member.totalPower.toFixed(1)}
-                          {member.powerUnit}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-400">
-                        Joined {new Date(member.createdAt).toLocaleDateString()}
-                      </span>
-                      <span className="text-red-400 flex items-center group-hover:translate-x-1 transition-transform">
-                        View <ChevronRight className="ml-1 h-4 w-4" />
-                      </span>
-                    </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-gray-400">
+                      Joined {new Date(member.createdAt).toLocaleDateString()}
+                    </span>
+                    <span className="text-red-400 flex items-center group-hover:translate-x-1 transition-transform">
+                      View <ChevronRight className="ml-1 h-4 w-4" />
+                    </span>
                   </div>
-                </Link>
-              ))
+                </div>
+              </Link>
+            ))
             : null}
         </div>
 
