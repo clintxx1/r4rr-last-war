@@ -16,9 +16,9 @@ export default async function MemberProfilePage({ params }: { params: Promise<{ 
   const { id } = await params;
   const fetchMemberData = async () => {
     try {
-      const res = await fetch(`${process.env.VERCEL_URL}/api/members/${id}`, { method: "GET" });
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/members/${id}`, { method: "GET" });
       const data =  await res.json();
-      console.log("Member data:", data, id, `${process.env.VERCEL_URL}/api/members/${id}`)
+      console.log("Member data:", data, id, `${process.env.NEXT_PUBLIC_API_URL}/api/members/${id}`)
       return data;
     } catch (error) {
       console.log("Error fetching member data:", error)
