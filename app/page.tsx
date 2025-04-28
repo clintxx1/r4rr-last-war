@@ -37,7 +37,7 @@ export default function LandingPage() {
   const fetchAllMembers = async () => {
     try {
       const res = await fetch(
-        `/api/members`
+        `/api/members?limit=4`
         , { method: "GET" })
       const members = await res.json();
       if (members?.members?.length) {
