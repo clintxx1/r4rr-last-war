@@ -18,6 +18,7 @@ import {
   Filter,
   ArrowLeft,
   Flame,
+  ChevronLeft,
 } from "lucide-react";
 import React, { useEffect, useMemo, useState } from "react";
 import { debounce } from "lodash";
@@ -44,19 +45,23 @@ export const dynamic = "force-dynamic";
 export default function MembersPage() {
   const [teamMembers, setTeamMembers] = useState<MemberProps[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  // const [page, setPage] = useState<number>(1);
-  // const [totalPage, setTotalPage] = useState<number | null>(null);
-  // const [limit, setLimit] = useState<number>(20);
+  const [page, setPage] = useState<number>(1);
+  const [currentPage, setCurrentPage] = useState<number>();
+  const [totalPages, setTotalPages] = useState<number | null>(null);
+  const [limit, setLimit] = useState<number>(20);
   const [name, setName] = useState<string>("");
   const [alliancePosition, setAlliancePosition] = useState<string>("all");
   const [totalPower, setTotalPower] = useState<string>("");
   useEffect(() => {
+    setPage(1); // Reset to page 1 whenever search parameters change
+  }, [name, alliancePosition, totalPower]);
+  useEffect(() => {
     const fetchData = async () => {
       await fetchAllMembers();
       setIsLoading(false);
-    }
+    };
     fetchData();
-  }, [name, totalPower, alliancePosition]);
+  }, [name, totalPower, alliancePosition, page]);
   useEffect(() => {
     return () => {
       debouncedSearch.cancel();
@@ -65,11 +70,13 @@ export default function MembersPage() {
   const fetchAllMembers = async () => {
     try {
       const res = await fetch(
-        `/api/members?name=${name}&alliancePosition=${alliancePosition}&totalPower=${totalPower}`
-        , { method: "GET" });
+        `/api/members?name=${name}&alliancePosition=${alliancePosition}&totalPower=${totalPower}&page=${page}`,
+        { method: "GET", cache: "no-store" }
+      );
       const members = await res.json();
       setTeamMembers(members?.members);
-      // setTotalPage(members?.totalPages);
+      setTotalPages(members?.totalPages);
+      setCurrentPage(members?.currentPage)
     } catch (error) {
       console.error(error, "error here");
     }
@@ -178,9 +185,6 @@ export default function MembersPage() {
                   <SelectContent className="bg-gray-800 border-gray-700 text-white">
                     <SelectItem value="desc">Power (High to Low)</SelectItem>
                     <SelectItem value="asc">Power (Low to High)</SelectItem>
-                    {/* <SelectItem value="asc">Level (High to Low)</SelectItem>
-                    <SelectItem value="name">Name (A-Z)</SelectItem>
-                    <SelectItem value="joined">Join Date (Newest)</SelectItem> */}
                   </SelectContent>
                 </Select>
               </div>
@@ -192,114 +196,115 @@ export default function MembersPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {teamMembers.length
             ? teamMembers.map((member) => (
-              <Link
-                href={`/members/${member._id}`}
-                key={member._id}
-                className="group bg-gray-900/30 border border-gray-800 hover:border-red-500/50 rounded-lg overflow-hidden transition-all duration-300"
-              >
-                <div className="relative h-40 overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/80 z-10"></div>
-                  <Image
-                    src={member.profile || "/placeholder.png"}
-                    alt={member.name}
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-110"
-                  />
-                  {/* <div className="absolute top-3 right-3 z-20">
-                  <div
-                    className={`flex items-center gap-1.5 rounded-full px-2 py-1 text-xs ${
-                      member.status === "online"
-                        ? "bg-green-500/20 text-green-400"
-                        : "bg-gray-500/20 text-gray-400"
-                    }`}
-                  >
-                    <span
-                      className={`h-2 w-2 rounded-full ${
-                        member.status === "online"
-                          ? "bg-green-400"
-                          : "bg-gray-400"
-                      }`}
-                    ></span>
-                    {member.status === "online" ? "Online" : "Offline"}
-                  </div>
-                </div> */}
-                  <div className="absolute bottom-3 left-3 right-3 z-20">
-                    <h3 className="text-lg font-bold text-white">
-                      {member.name}
-                    </h3>
-                    <p className="text-sm text-gray-300">
-                      [{member.alliancePosition}]&nbsp;
-                      {member.positionDescription}
-                    </p>
-                  </div>
-                </div>
-                <div className="p-4">
-                  <div className="grid grid-cols-2 gap-2 mb-4">
-                    <div className="bg-gray-800/50 rounded p-2 text-center">
-                      <p className="text-xs text-gray-400">LEVEL</p>
-                      <p className="text-lg font-bold text-white">
-                        {member.level}
-                      </p>
-                    </div>
-                    <div className="bg-gray-800/50 rounded p-2 text-center">
-                      <p className="text-xs text-gray-400">POWER</p>
-                      <p className="text-lg font-bold text-red-400">
-                        {member.totalPower.toFixed(1)}
-                        {member.powerUnit}
+                <Link
+                  href={`/members/${member._id}`}
+                  key={member._id}
+                  className="group bg-gray-900/30 border border-gray-800 hover:border-red-500/50 rounded-lg overflow-hidden transition-all duration-300"
+                >
+                  <div className="relative h-40 overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/80 z-10"></div>
+                    <Image
+                      src={member.profile || "/placeholder.png"}
+                      alt={member.name}
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
+                    <div className="absolute bottom-3 left-3 right-3 z-20">
+                      <h3 className="text-lg font-bold text-white">
+                        {member.name}
+                      </h3>
+                      <p className="text-sm text-gray-300">
+                        [{member.alliancePosition}]&nbsp;
+                        {member.positionDescription}
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-400">
-                      Joined {new Date(member.createdAt).toLocaleDateString()}
-                    </span>
-                    <span className="text-red-400 flex items-center group-hover:translate-x-1 transition-transform">
-                      View <ChevronRight className="ml-1 h-4 w-4" />
-                    </span>
+                  <div className="p-4">
+                    <div className="grid grid-cols-2 gap-2 mb-4">
+                      <div className="bg-gray-800/50 rounded p-2 text-center">
+                        <p className="text-xs text-gray-400">LEVEL</p>
+                        <p className="text-lg font-bold text-white">
+                          {member.level}
+                        </p>
+                      </div>
+                      <div className="bg-gray-800/50 rounded p-2 text-center">
+                        <p className="text-xs text-gray-400">POWER</p>
+                        <p className="text-lg font-bold text-red-400">
+                          {member.totalPower.toFixed(1)}
+                          {member.powerUnit}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-gray-400">
+                        Joined {new Date(member.createdAt).toLocaleDateString()}
+                      </span>
+                      <span className="text-red-400 flex items-center group-hover:translate-x-1 transition-transform">
+                        View <ChevronRight className="ml-1 h-4 w-4" />
+                      </span>
+                    </div>
                   </div>
-                </div>
-              </Link>
-            ))
+                </Link>
+              ))
             : null}
         </div>
 
         {/* Pagination */}
-        {/* <div className="mt-8 flex justify-center">
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="icon"
-              className="border-gray-700 text-gray-300 hover:bg-gray-800"
-            >
-              <ArrowLeft className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="outline"
-              className="border-gray-700 bg-gray-800 text-white"
-            >
-              1
-            </Button>
-            <Button
-              variant="outline"
-              className="border-gray-700 text-gray-300 hover:bg-gray-800"
-            >
-              2
-            </Button>
-            <Button
-              variant="outline"
-              className="border-gray-700 text-gray-300 hover:bg-gray-800"
-            >
-              3
-            </Button>
-            <Button
-              variant="outline"
-              size="icon"
-              className="border-gray-700 text-gray-300 hover:bg-gray-800"
-            >
-              <ChevronRight className="h-4 w-4" />
-            </Button>
+        {totalPages && totalPages > 1 && (
+          <div className="mt-8 flex justify-center">
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="icon"
+                className="border-gray-700 text-gray-300 hover:bg-gray-800"
+                onClick={() => setPage(Math.max(1, page - 1))}
+                disabled={page === 1}
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+
+              {/* Generate page buttons */}
+              {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                // Show pages around current page
+                let pageNum;
+                if (totalPages <= 5) {
+                  pageNum = i + 1;
+                } else if (page <= 3) {
+                  pageNum = i + 1;
+                } else if (page >= totalPages - 2) {
+                  pageNum = totalPages - 4 + i;
+                } else {
+                  pageNum = page - 2 + i;
+                }
+
+                return (
+                  <Button
+                    key={pageNum}
+                    variant="outline"
+                    className={`border-gray-700 ${
+                      page === pageNum
+                        ? "bg-gray-800 text-white"
+                        : "text-gray-300 hover:bg-gray-800"
+                    }`}
+                    onClick={() => setPage(pageNum)}
+                  >
+                    {pageNum}
+                  </Button>
+                );
+              })}
+
+              <Button
+                variant="outline"
+                size="icon"
+                className="border-gray-700 text-gray-300 hover:bg-gray-800"
+                onClick={() => setPage(Math.min(totalPages, page + 1))}
+                disabled={page === totalPages}
+              >
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
-        </div> */}
+        )}
       </main>
 
       {/* Footer */}
