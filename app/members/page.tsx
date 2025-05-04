@@ -196,61 +196,61 @@ export default function MembersPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {teamMembers.length
             ? teamMembers.map((member) => (
-                <Link
-                  href={`/members/${member._id}`}
-                  key={member._id}
-                  className="group bg-gray-900/30 border border-gray-800 hover:border-red-500/50 rounded-lg overflow-hidden transition-all duration-300"
-                >
-                  <div className="relative h-40 overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/80 z-10"></div>
-                    <Image
-                      src={member.profile || "/placeholder.png"}
-                      alt={member.name}
-                      fill
-                      className="object-cover transition-transform duration-500 group-hover:scale-110"
-                    />
-                    <div className="absolute bottom-3 left-3 right-3 z-20">
-                      <h3 className="text-lg font-bold text-white">
-                        {member.name}
-                      </h3>
-                      <p className="text-sm text-gray-300">
-                        [{member.alliancePosition}]&nbsp;
-                        {member.positionDescription}
+              <Link
+                href={`/members/${member._id}`}
+                key={member._id}
+                className="group bg-gray-900/30 border border-gray-800 hover:border-red-500/50 rounded-lg overflow-hidden transition-all duration-300"
+              >
+                <div className="relative h-40 overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/80 z-10"></div>
+                  <Image
+                    src={member.profile || "/placeholder.png"}
+                    alt={member.name}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                  <div className="absolute bottom-3 left-3 right-3 z-20">
+                    <h3 className="text-lg font-bold text-white">
+                      {member.name}
+                    </h3>
+                    <p className="text-sm text-gray-300">
+                      [{member.alliancePosition}]&nbsp;
+                      {member.positionDescription}
+                    </p>
+                  </div>
+                </div>
+                <div className="p-4">
+                  <div className="grid grid-cols-2 gap-2 mb-4">
+                    <div className="bg-gray-800/50 rounded p-2 text-center">
+                      <p className="text-xs text-gray-400">LEVEL</p>
+                      <p className="text-lg font-bold text-white">
+                        {member.level}
+                      </p>
+                    </div>
+                    <div className="bg-gray-800/50 rounded p-2 text-center">
+                      <p className="text-xs text-gray-400">POWER</p>
+                      <p className="text-lg font-bold text-red-400">
+                        {member.totalPower.toFixed(1)}
+                        {member.powerUnit}
                       </p>
                     </div>
                   </div>
-                  <div className="p-4">
-                    <div className="grid grid-cols-2 gap-2 mb-4">
-                      <div className="bg-gray-800/50 rounded p-2 text-center">
-                        <p className="text-xs text-gray-400">LEVEL</p>
-                        <p className="text-lg font-bold text-white">
-                          {member.level}
-                        </p>
-                      </div>
-                      <div className="bg-gray-800/50 rounded p-2 text-center">
-                        <p className="text-xs text-gray-400">POWER</p>
-                        <p className="text-lg font-bold text-red-400">
-                          {member.totalPower.toFixed(1)}
-                          {member.powerUnit}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-400">
-                        Joined {new Date(member.createdAt).toLocaleDateString()}
-                      </span>
-                      <span className="text-red-400 flex items-center group-hover:translate-x-1 transition-transform">
-                        View <ChevronRight className="ml-1 h-4 w-4" />
-                      </span>
-                    </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-gray-400">
+                      Joined {new Date(member.createdAt).toLocaleDateString()}
+                    </span>
+                    <span className="text-red-400 flex items-center group-hover:translate-x-1 transition-transform">
+                      View <ChevronRight className="ml-1 h-4 w-4" />
+                    </span>
                   </div>
-                </Link>
-              ))
-            : null}
+                </div>
+              </Link>
+            ))
+            : <p>No members found</p>}
         </div>
 
         {/* Pagination */}
-        {totalPages && totalPages > 1 && (
+        {totalPages && totalPages > 1 ? (
           <div className="mt-8 flex justify-center">
             <div className="flex items-center gap-2">
               <Button
@@ -281,11 +281,10 @@ export default function MembersPage() {
                   <Button
                     key={pageNum}
                     variant="outline"
-                    className={`border-gray-700 ${
-                      page === pageNum
+                    className={`border-gray-700 ${page === pageNum
                         ? "bg-gray-800 text-white"
                         : "text-gray-300 hover:bg-gray-800"
-                    }`}
+                      }`}
                     onClick={() => setPage(pageNum)}
                   >
                     {pageNum}
@@ -304,7 +303,7 @@ export default function MembersPage() {
               </Button>
             </div>
           </div>
-        )}
+        ) : null}
       </main>
 
       {/* Footer */}
