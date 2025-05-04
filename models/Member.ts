@@ -63,7 +63,11 @@ const MemberSchema = new Schema(
       required: false,
       trim: true,
     },
-    gallery: []
+    gallery: [],
+    deletedAt: {
+      type: Boolean,
+      default: false,
+    }
   },
   {
     timestamps: true,

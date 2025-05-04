@@ -4,6 +4,7 @@ import Member from "@/models/Member";
 import { SortOrder } from "mongoose";
 import { NextResponse } from "next/server";
 type QueryProps = {
+  deletedAt: null | boolean;
   name?: { $regex: string; $options: string; };
   alliancePosition?: string;
 };
@@ -19,7 +20,9 @@ export async function GET(req: Request) {
     const alliancePosition = searchParams.get("alliancePosition");
     const totalPower = searchParams.get("totalPower");
 
-    const query: QueryProps = {};
+    const query: QueryProps = {
+      deletedAt: null,
+    };
     let sort: SortProps = {
       alliancePosition: -1,
       _id: 1
