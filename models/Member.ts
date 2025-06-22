@@ -63,7 +63,7 @@ const MemberSchema = new Schema(
       required: false,
       trim: true,
     },
-    gallery: [],
+    achievements: [],
     deletedAt: {
       type: Boolean,
       default: false,

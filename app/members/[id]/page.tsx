@@ -2,9 +2,10 @@ import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
-import { ArrowLeft, Flame, Trophy, Swords, Heart, Gift, Users, Share2, ChevronRight, BarChart3 } from "lucide-react"
+import { ArrowLeft, Flame, Trophy, Swords, Heart, Gift, Users, Share2, ChevronRight, BarChart3, Target, Star, Shield } from "lucide-react"
 import { MemberProps } from "../page"
 import { ShareButton } from "../_components/share"
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 
 type CustomMemberProps = MemberProps & {
   bio: string;
@@ -17,7 +18,7 @@ export default async function MemberProfilePage({ params }: { params: Promise<{ 
   const fetchMemberData = async () => {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/members/${id}`, { method: "GET" });
-      const data =  await res.json();
+      const data = await res.json();
       return data;
     } catch (error) {
       console.error("Error fetching member data:", error)
@@ -70,30 +71,13 @@ export default async function MemberProfilePage({ params }: { params: Promise<{ 
                   <div>
                     <div className="flex items-center gap-3">
                       <h1 className="text-3xl font-bold">{member.name}</h1>
-                      {/* <div
-                        className={`flex items-center gap-1.5 rounded-full px-2 py-1 text-xs ${
-                          member.status === "online" ? "bg-green-500/20 text-green-400" : "bg-gray-500/20 text-gray-400"
-                        }`}
-                      >
-                        <span
-                          className={`h-2 w-2 rounded-full ${
-                            member.status === "online" ? "bg-green-400" : "bg-gray-400"
-                          }`}
-                        ></span>
-                        {member.status === "online" ? "Online" : "Offline"}
-                      </div> */}
                     </div>
                     <p className="text-red-400 font-medium">[{member.alliancePosition}] - {member.positionDescription}</p>
                     <p className="text-gray-400 text-sm mt-1">
                       Member since {new Date(member.createdAt).toLocaleDateString()}
                     </p>
                   </div>
-
                   <div className="flex gap-3">
-                    {/* <Button variant="outline" size="sm" className="border-gray-700 text-gray-300 hover:bg-gray-800">
-                      <Heart className="mr-2 h-4 w-4" />
-                      Like
-                    </Button> */}
                     <ShareButton memberId={member._id} memberName={member.name} />
                   </div>
                 </div>
@@ -199,21 +183,58 @@ export default async function MemberProfilePage({ params }: { params: Promise<{ 
                 Achievements
               </h2>
               <div className="space-y-4">
-                {member.achievements ? member.achievements.map((achievement, index) => (
-                  <div key={index} className="flex items-start gap-3 pb-4 border-b border-gray-800 last:border-0">
+                {member.achievements && member.achievements.length > 0 ? member.achievements.map((achievement, index) => (
+                  index < 3 ? <div key={index} className="flex items-start gap-3 pb-4 border-b border-gray-800 last:border-0">
                     <div className="bg-red-500/20 p-2 rounded-full">
                       <Trophy className="h-4 w-4 text-red-400" />
                     </div>
-                    <div>
-                      <p className="font-medium">{achievement}</p>
+                    <div dangerouslySetInnerHTML={{ __html: achievement }} className="flex-grow text-gray-300">
+                      {/* <p className="font-medium">{achievement}</p> */}
                     </div>
-                  </div>
+                  </div> : null
                 )) : "No achievements yet"}
               </div>
               <div className="mt-4 pt-4 border-t border-gray-800">
-                <Button variant="outline" className="w-full border-gray-700 text-gray-300 hover:bg-gray-800">
-                  View All Achievements <ChevronRight className="ml-1 h-4 w-4" />
-                </Button>
+                <Sheet>
+                  <SheetTrigger asChild>
+                    <Button variant="outline" className="w-full border-gray-700 text-gray-300 hover:bg-gray-800">
+                      View All Achievements <ChevronRight className="ml-1 h-4 w-4" />
+                    </Button>
+                  </SheetTrigger>
+                  <SheetContent className="w-full sm:w-[540px] bg-gray-900 border-gray-800 text-white">
+                    <SheetHeader>
+                      <SheetTitle className="text-white flex items-center gap-2">
+                        <Trophy className="h-5 w-5 text-red-500" />
+                        All Achievements
+                      </SheetTitle>
+                      <SheetDescription className="text-gray-400">
+                        Complete collection of {member.name}'s achievements and accomplishments
+                      </SheetDescription>
+                    </SheetHeader>
+
+                    <div className="mt-6 space-y-4 max-h-[calc(100vh-180px)] overflow-y-auto px-2">
+                      {member.achievements && member.achievements.length > 0 ? member.achievements.map((achievement, index) => (
+                        <div key={index} className="bg-gray-800/50 border border-gray-700 rounded-lg p-4">
+                          <div className="flex items-start gap-3">
+                            <div
+                              className={`p-2 rounded-full bg-blue-500/20`}
+                            >
+                              {["secured", "managed", "dealt", "triggered", "defeated"].some((word) => achievement.toLocaleLowerCase().includes(word)) && <Trophy className="h-5 w-5 text-yellow-500" />}
+                              {achievement.toLocaleLowerCase().includes("launch") && <Swords className="h-5 w-5 text-red-500" />}
+                              {["found", "gathered", "received"].some((word) => achievement.toLocaleLowerCase().includes(word)) && <Target className="h-5 w-5 text-blue-500" />}
+                              {achievement.toLocaleLowerCase().includes("consumed") && <Star className="h-5 w-5 text-yellow-500" />}
+                              {["assist", "helped", "healed", "donated"].some((word) => achievement.toLocaleLowerCase().includes(word)) && <Shield className="h-5 w-5 text-gray-500" />}
+                              {achievement.toLocaleLowerCase().includes("trained") && <Users className="h-5 w-5 text-purple-500" />}
+                            </div>
+                            <div className="flex-grow">
+                              <div dangerouslySetInnerHTML={{ __html: achievement }} className="flex-grow text-gray-300"></div>
+                            </div>
+                          </div>
+                        </div>
+                      )) : <p className="text-center text-gray-400 overflow-hidden">No achievements yet</p>}
+                    </div>
+                  </SheetContent>
+                </Sheet>
               </div>
             </div>
           </div>
