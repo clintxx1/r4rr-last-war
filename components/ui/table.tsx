@@ -43,7 +43,7 @@ export function Table<T extends { _id: string }>({ columns, data, page, totalPag
                       ? col.render && col.render(null, row)
                       : col.render
                       ? col.render(row[col.key], row)
-                      : row[col.key]}
+                      : row[col.key] as React.ReactNode}
                   </td>
                 ))}
               </tr>
